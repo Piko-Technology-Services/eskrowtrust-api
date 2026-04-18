@@ -124,13 +124,19 @@ class WalletController extends Controller
                 'amount'    => $data['amount'],
             ]);
 
-            return $this->ok('Deposit initialized. Complete payment to fund your wallet.', [
-                'reference'    => $reference,
-                'amount'       => (float) $data['amount'],
-                'checkout_url' => $lencoData['checkoutUrl'] ?? $lencoData['link'] ?? null,
-                'instructions' => $lencoData,
-                'status'       => 'pending',
+            return response()->json([
+                'success' => true,
+                'message' => 'Deposit initialized. Complete payment to fund your wallet.',
+                'data'    => $lencoData,
             ], 201);
+
+            // return $this->ok('Deposit initialized. Complete payment to fund your wallet.', [
+            //     'reference'    => $reference,
+            //     'amount'       => (float) $data['amount'],
+            //     'checkout_url' => $lencoData['checkoutUrl'] ?? $lencoData['link'] ?? null,
+            //     'instructions' => $lencoData,
+            //     'status'       => 'pending',
+            // ], 201);
 
         } catch (\RuntimeException $e) {
             // Lenco call failed — mark our record failed immediately so it
@@ -147,8 +153,37 @@ class WalletController extends Controller
             ]);
 
             return $this->error('Could not initialize deposit. Please try again.', 502);
+            // return $this->error('Deposit initialization failed: ' . $e->getMessage(), 502);
         }
     }
+
+public function verifyDeposit(Request $request, LencoService $lenco)
+{
+    $request->validate([
+        'reference' => 'required|string',
+    ]);
+
+    try {
+        $data = $lenco->verifyDeposit($request->reference);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Deposit status retrieved successfully',
+            'data'    => $data,
+        ]);
+
+    } catch (\Throwable $e) {
+        Log::error('[Wallet] Verify deposit failed', [
+            'reference' => $request->reference,
+            'error'     => $e->getMessage(),
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to verify deposit',
+        ], 500);
+    }
+}
 
     // ─────────────────────────────────────────────────────────────────────────
     // POST /api/wallet/withdraw

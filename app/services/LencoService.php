@@ -76,15 +76,24 @@ public function initializeDeposit(
 
     Log::info('Lenco Response: ', $resp);
 
-    return $this->unwrap($response, 'initializeDeposit');
+    // return $this->unwrap($response, 'initializeDeposit');
+    return $resp;
 }
 
-public function verifyDeposit(string $reference): array
-{
-    $response = $this->get("/collections/{$reference}");
+    public function verifyDeposit(string $reference): array
+    {
+        Log::info('[Lenco] Verifying deposit', [
+            'reference' => $reference,
+        ]);
 
-    return $this->unwrap($response, 'verifyDeposit');
-}
+        $response = $this->get("/collections/status/{$reference}");
+
+        $resp = $this->unwrap($response, 'verifyDeposit');
+
+        Log::info('Lenco Response: ', $resp);
+
+        return $resp;
+    }
 
     // ─────────────────────────────────────────────────────────────────────────
     // Withdrawals  — Lenco Transfers API
@@ -133,6 +142,7 @@ public function verifyDeposit(string $reference): array
         $response = $this->post('/transfers', $payload);
 
         return $this->unwrap($response, 'withdraw');
+        
     }
 
     /**
