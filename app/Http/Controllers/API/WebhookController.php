@@ -41,6 +41,12 @@ class WebhookController extends Controller
 
     public function handle(Request $request): JsonResponse
     {
+
+        Log::info('[Webhook] Received request', [
+            'ip' => $request->ip(),
+            'headers' => $request->headers->all(),
+        ]);
+
         $rawBody   = $request->getContent();
         $signature = $request->header('X-Lenco-Signature', '');
 
