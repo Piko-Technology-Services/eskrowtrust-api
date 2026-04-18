@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\WalletController;
+use App\Http\Controllers\Api\WebhookController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\Api\DashboardController;
 
 Route::get('/', function () {
     return response()->json(['Eskrowtrust' => 'Global Trust in Every Transaction']);
@@ -17,6 +20,26 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/complete-profile', [AuthController::class, 'completeProfile']);
     });
+});
+
+Route::middleware('auth:sanctum')->get('/dashboard', [DashboardController::class, 'index']);
+
+
+
+// ── PUBLIC WEBHOOK (no auth) ──
+Route::post('/webhook/lenco', [WebhookController::class, 'handle']);
+
+// ── PROTECTED WALLET ROUTES ──
+Route::middleware('auth:sanctum')->prefix('wallet')->group(function () {
+
+    Route::get('/', [WalletController::class, 'show']);
+
+    Route::get('/transactions', [WalletController::class, 'transactions']);
+
+    Route::post('/deposit', [WalletController::class, 'deposit']);
+
+    Route::post('/withdraw', [WalletController::class, 'withdraw']);
+
 });
 
 Route::get('/user', function (Request $request) {

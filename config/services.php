@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'lenco' => [
+        'api_key' => env('LENCO_SECRET_PAYMENTS_KEY'),
+        'callback_url' => env('LENCO_WEBHOOK_URL')
+    ],
 
 ];
