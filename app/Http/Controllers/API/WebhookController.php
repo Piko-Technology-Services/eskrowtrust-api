@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/Api/WebhookController.php
 
 namespace App\Http\Controllers\Api;
 
