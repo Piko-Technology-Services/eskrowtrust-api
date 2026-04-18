@@ -5,7 +5,7 @@ use App\Http\Controllers\API\WebhookController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\API\DashboardController;
 
 Route::get('/', function () {
     return response()->json(['Eskrowtrust' => 'Global Trust in Every Transaction']);
