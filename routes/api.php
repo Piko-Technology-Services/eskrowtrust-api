@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\WalletController;
-use App\Http\Controllers\Api\WebhookController;
+use App\Http\Controllers\API\WalletController;
+use App\Http\Controllers\API\WebhookController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\AuthController;
